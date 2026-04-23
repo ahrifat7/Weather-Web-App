@@ -19,7 +19,3 @@ To use the OpenWeatherMap API, you need to obtain an API key. Follow these steps
 ```
 const API_KEY = 'YOUR_API_KEY';
 ```
-
-# Preview
-
-![WeatherPulse](./overview/overview.mp4)
