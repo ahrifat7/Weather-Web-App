@@ -22,4 +22,4 @@ const API_KEY = 'YOUR_API_KEY';
 
 # Preview
 
-![WeatherPulse](./overview/overview.webm)
+![WeatherPulse](./overview/overview.mp4)
