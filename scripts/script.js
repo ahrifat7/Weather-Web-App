@@ -18,8 +18,9 @@ setRandomBackground();
 async function getWeather(city) {
   const apiKey = "7e9d3d6449f07719ae9a0999caded756";
   const unit = "metric";
-  const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${unit}`;
-  const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=${unit}`;
+  const encodedCity = encodeURIComponent(city);
+  const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodedCity}&appid=${apiKey}&units=${unit}`;
+  const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodedCity}&appid=${apiKey}&units=${unit}`;
 
   await fetchWeatherData(apiUrl, forecastUrl);
 }
@@ -55,22 +56,52 @@ async function fetchWeatherData(apiUrl, forecastUrl) {
   }
 }
 
-function getWeatherByLocation() {
+async function getWeatherByLocation() {
+  loader();
+  
+  // List of location services to try in order
+  const services = [
+    { url: 'https://ipapi.co/json/', lat: 'latitude', lon: 'longitude' },
+    { url: 'https://freeipapi.com/api/json', lat: 'latitude', lon: 'longitude' }
+  ];
+
+  for (const service of services) {
+    try {
+      const response = await fetch(service.url);
+      if (!response.ok) throw new Error("Service unavailable");
+      const data = await response.json();
+      const lat = data[service.lat];
+      const lon = data[service.lon];
+
+      if (lat && lon) {
+        console.log(`Location detected via ${service.url}`);
+        await getWeatherByCoords(lat, lon);
+        return; // Success
+      }
+    } catch (err) {
+      console.warn(`Service ${service.url} failed:`, err.message);
+    }
+  }
+
+  // If all IP services fail, try browser geolocation as a final automatic attempt
+  console.log("All IP services failed, trying browser geolocation...");
+  useBrowserGeolocation();
+}
+
+function useBrowserGeolocation() {
   if (navigator.geolocation) {
-    loader();
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
         getWeatherByCoords(latitude, longitude);
       },
       (error) => {
-        console.warn("Geolocation error:", error.message);
-        getWeather("London"); // Fallback city
+        console.warn("Browser Geolocation error:", error.message);
+        getWeather("London"); // Final fallback
       }
     );
   } else {
-    console.warn("Geolocation not supported");
-    getWeather("London"); // Fallback city
+    getWeather("London");
   }
 }
 
