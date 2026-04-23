@@ -21,6 +21,19 @@ async function getWeather(city) {
   const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${unit}`;
   const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=${unit}`;
 
+  await fetchWeatherData(apiUrl, forecastUrl);
+}
+
+async function getWeatherByCoords(lat, lon) {
+  const apiKey = "7e9d3d6449f07719ae9a0999caded756";
+  const unit = "metric";
+  const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=${unit}`;
+  const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=${unit}`;
+
+  await fetchWeatherData(apiUrl, forecastUrl);
+}
+
+async function fetchWeatherData(apiUrl, forecastUrl) {
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
@@ -39,6 +52,25 @@ async function getWeather(city) {
   } catch (error) {
     console.error('Error fetching data:', error);
     showError("Something went wrong");
+  }
+}
+
+function getWeatherByLocation() {
+  if (navigator.geolocation) {
+    loader();
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        getWeatherByCoords(latitude, longitude);
+      },
+      (error) => {
+        console.warn("Geolocation error:", error.message);
+        getWeather("London"); // Fallback city
+      }
+    );
+  } else {
+    console.warn("Geolocation not supported");
+    getWeather("London"); // Fallback city
   }
 }
 
@@ -154,4 +186,4 @@ window.addEventListener("click", (e) => {
   }
 });
 
-
+window.addEventListener("load", getWeatherByLocation);
