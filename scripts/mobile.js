@@ -1,0 +1,1 @@
+// Mobile logic moved to script.js for consistency
