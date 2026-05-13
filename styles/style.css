@@ -42,6 +42,13 @@ header {
   top: 0;
   z-index: 1000;
   padding: 1rem 2rem;
+  transition: var(--transition);
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 1rem 1rem;
+  }
 }
 
 .navbar {
@@ -58,6 +65,9 @@ header {
   max-width: 1200px;
   margin: 0 auto;
   transition: var(--transition);
+  position: relative;
+  z-index: 10;
+  gap: 1rem;
 }
 
 .nav-brand .repo-link {
@@ -164,7 +174,8 @@ header {
   visibility: hidden;
   transform: translateY(10px);
   transition: var(--transition);
-  z-index: 1001;
+  z-index: 2000;
+  background: rgba(30, 60, 114, 0.95);
 }
 
 .dropdown-content.show {
@@ -256,8 +267,9 @@ header {
 }
 
 .details-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 1rem;
 }
 
@@ -273,6 +285,8 @@ header {
   align-items: center;
   gap: 0.5rem;
   transition: var(--transition);
+  flex: 1 1 180px;
+  max-width: 220px;
 }
 
 .detail-card:hover {
@@ -363,6 +377,8 @@ header {
 .mobile-search-container {
   display: none;
   margin-top: 1rem;
+  position: relative;
+  z-index: 5;
 }
 
 @media (max-width: 768px) {
@@ -373,6 +389,21 @@ header {
   .nav-actions .search-wrapper,
   .nav-actions .action-buttons a:not(#resetBtn) {
     display: none;
+  }
+
+  .navbar {
+    padding: 0.75rem 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .nav-actions {
+    gap: 0.5rem;
+  }
+
+  .action-buttons a, .dropdown-toggle {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
   }
   
   .mobile-search-container {
@@ -401,7 +432,36 @@ header {
   }
   
   .details-grid {
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+  }
+
+  .detail-card {
+    flex: 1 1 calc(50% - 1rem);
+    max-width: none;
+  }
+
+  @media (max-width: 400px) {
+    .nav-brand .repo-link {
+      font-size: 1.1rem;
+    }
+    
+    .brand-emoji {
+      font-size: 1.1rem;
+    }
+  }
+
+  .footer-pill {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+    border-radius: 20px;
+    max-width: 250px;
+  }
+
+  .dev-emoji {
+    display: none;
   }
 }
 
